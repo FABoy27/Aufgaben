@@ -4,9 +4,9 @@
 #include <algorithm>
 
 //Die Texte werden mit einem bestimmten abstand untereinander Positioniert
-void renderList(sf::RenderWindow& window, sf::Font font, std::vector<int>& numbersList, int gap, int xPos)
+void renderList(sf::RenderWindow& window, sf::Font font, std::vector<int>& numbersList, float gap, float xPos)
 {
-    auto yPos = 50;
+    float yPos = 50.0f;
 
     for (int e : numbersList)
     {
@@ -96,8 +96,8 @@ int main()
         window.draw(sortedT);
         window.draw(unsortedT);
 
-        renderList(window, font, unsortedList, 40, 670);
-        renderList(window, font, sortedList, 40, 230);
+        renderList(window, font, unsortedList, 40.0f, 670.0f);
+        renderList(window, font, sortedList, 40.0f, 230.0f);
         window.display();
     }
 }
