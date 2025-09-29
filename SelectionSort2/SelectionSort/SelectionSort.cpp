@@ -98,7 +98,7 @@ int main()
     sf::Text unsortedT(font, "Unsortiert", 30);
     unsortedT.setPosition(sf::Vector2f(800, 10));
 
-    sf::Text infoText(font, "Druecke ENTER um die Liste zu Sortieren \n 1.6 Sekunden Cooldown", 10);
+    sf::Text infoText(font, "Druecke ENTER um die Liste zu Sortieren", 10);
     infoText.setPosition(sf::Vector2f(50, 7.0f));
 
     sf::Texture texture("assets/img/info.png");
