@@ -112,15 +112,10 @@ int main()
         {
             if (event->is<sf::Event::Closed>())
                 window.close();
-        }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
-        {
-            sf::Time elapsed1 = clock.getElapsedTime();
-            // Wenn man die Taste drückt wird die Function sehr oft ausgeführt deshalb dieser cooldown
-            if (elapsed1.asSeconds() > 1.6)
+            // Key Released ohne Clock-Object
+            if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
             {
-                clock.restart();
                 SelectionSort(unsortedList, selectedNumber);
             }
         }
