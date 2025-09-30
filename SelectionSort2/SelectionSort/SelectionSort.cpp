@@ -63,9 +63,9 @@ void addRandomNumToList(std::vector<int>& unsortedList)
 // Es wird gecheckt ob der vector leer ist da es sonst einen error gibt falls er leer ist
 // Sucht die kleinste Nummer in der Liste
 // Wenn die kleinste nummer gefunden wurde wird sie mit dem selectedInt getauscht
-void SelectionSort(std::vector<int>& unsortedList, int& selectedNumber)
+void SelectionSort(sf::RenderWindow& window, std::vector<int>& unsortedList, int& selectedNumber)
 {
-    if (unsortedList.empty() || selectedNumber < unsortedList.size())
+    if (unsortedList.empty() || selectedNumber < unsortedList.size() - 1)
     {
         int smallestNumber = selectedNumber;
 
@@ -79,6 +79,10 @@ void SelectionSort(std::vector<int>& unsortedList, int& selectedNumber)
 
         std::swap(unsortedList[selectedNumber], unsortedList[smallestNumber]);
         selectedNumber++;
+    }
+    else 
+    {
+        window.close();
     }
 }
 
@@ -116,7 +120,7 @@ int main()
             // Key Released ohne Clock-Object
             if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
             {
-                SelectionSort(unsortedList, selectedNumber);
+                SelectionSort(window, unsortedList, selectedNumber);
             }
         }
 
