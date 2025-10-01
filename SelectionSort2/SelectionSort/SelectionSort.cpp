@@ -45,19 +45,17 @@ void renderList(sf::RenderWindow& window, sf::Font font, std::vector<int>& numbe
     }
 }
 
-
-
-void addRandomNumToList(std::vector<int>& unsortedList)
+void addRandomNumToList(std::vector<int>& unsortedList, int maximumNum, int highestNum)
 {
     std::random_device rd;
     std::mt19937 rng(rd());
-    std::uniform_int_distribution<int> dist(1, 50);
+    std::uniform_int_distribution<int> dist(1, highestNum);
 
-    for (int i = 0; i < 20; ++i)
+    for (int i = 0; i < maximumNum; ++i)
     {
         int num = dist(rng);
         unsortedList.push_back(num);
-    }  
+    }
 }
 
 // Es wird gecheckt ob der vector leer ist da es sonst einen error gibt falls er leer ist
@@ -80,7 +78,7 @@ void SelectionSort(sf::RenderWindow& window, std::vector<int>& unsortedList, int
         std::swap(unsortedList[selectedNumber], unsortedList[smallestNumber]);
         selectedNumber++;
     }
-    else 
+    else
     {
         window.close();
     }
@@ -89,16 +87,36 @@ void SelectionSort(sf::RenderWindow& window, std::vector<int>& unsortedList, int
 
 int main()
 {
+    bool startingScreen = true;
+    bool sortScreen = false;
+
+    bool uMaximum = true;
+    bool uHighest = false;
+    int maximumNum = 20; // Maximale Zahlen die Sortiert werden
+    int highestNum = 50; // Höchste random Nummer
+
     sf::RenderWindow window(sf::VideoMode({ 1000, 900 }), "Selection Sort 2");
 
     std::vector<int> unsortedList;
     int selectedNumber = 0;
 
-    addRandomNumToList(unsortedList);
-        
     const sf::Font font("assets/fonts/ariblk.ttf");
-    sf::Clock clock;
 
+    //Starting Screen 
+    sf::Text sctT(font, "SORTING SYSTEM", 40);
+    sctT.setPosition(sf::Vector2f(300, 10));
+
+    sf::Text uMaximumT(font, "Maximale Sortier Zahlen: 20", 20);
+    uMaximumT.setPosition(sf::Vector2f(350, 100));
+
+    sf::Text uHighestT(font, "Hoechste Sortier Zahl: 50", 20);
+    uHighestT.setPosition(sf::Vector2f(350, 200));
+
+    sf::Text startScreenInfoT(font, "Mit den Pfeiltasten hoch und runter wird die zahl kleiner oder groeßer.\n Mit der Enter Taste kannst du einen Schritt weiter gehen und dann auch Starten.", 12);
+    startScreenInfoT.setPosition(sf::Vector2f(245, 260));
+    startScreenInfoT.setFillColor(sf::Color::Red);
+
+    //Sorting Screen 
     sf::Text unsortedT(font, "Nummern", 30);
     unsortedT.setPosition(sf::Vector2f(800, 10));
 
@@ -107,7 +125,7 @@ int main()
 
     sf::Texture texture("assets/img/info.png");
     sf::Sprite infoSprite(texture);
-    infoSprite.setScale(sf::Vector2f(0.2f, 0.2f)); 
+    infoSprite.setScale(sf::Vector2f(0.2f, 0.2f));
 
     sf::Text finishedT(font, "", 20);
     finishedT.setPosition(sf::Vector2f(10, 45));
@@ -122,7 +140,59 @@ int main()
             // Key Released ohne Clock-Object
             if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
             {
-                SelectionSort(window, unsortedList, selectedNumber);
+                //Escape
+                if (static_cast<int>(keyReleased->code) == 58)
+                {
+                    if (startingScreen)
+                    {
+                        if (uMaximum)
+                        {
+                            uMaximum = false;
+                            uHighest = true;
+                        }
+                        else if (!uMaximum && uHighest)
+                        {
+                            startingScreen = false;
+                            sortScreen = true;
+                            uHighest = false;
+                            addRandomNumToList(unsortedList, maximumNum, highestNum);
+                        }
+                    }
+                    else if (sortScreen)
+                    {
+                        SelectionSort(window, unsortedList, selectedNumber);
+                    }
+                }
+
+                //Arrow Key up 
+                if (static_cast<int>(keyReleased->code) == 73)
+                {
+                    if (uMaximum)
+                    {
+                        maximumNum++;
+                        uMaximumT.setString("Maximale Sortier Zahlen: " + std::to_string(maximumNum));
+                    }
+                    else if (!uMaximum && uHighest)
+                    {
+                        highestNum++;
+                        uHighestT.setString("Hoechste Sortier Zahl: " + std::to_string(highestNum));
+                    }
+                }
+
+                //Arrow Key down
+                if (static_cast<int>(keyReleased->code) == 74)
+                {
+                    if (uMaximum && maximumNum > 1)
+                    {
+                        maximumNum--;
+                        uMaximumT.setString("Maximale Sortier Zahlen: " + std::to_string(maximumNum));
+                    }
+                    else if (!uMaximum && uHighest && highestNum > 2)
+                    {
+                        highestNum--;
+                        uHighestT.setString("Hoechste Sortier Zahl: " + std::to_string(highestNum));
+                    }
+                }
             }
         }
 
@@ -130,13 +200,25 @@ int main()
 
         window.clear();
 
-        window.draw(unsortedT);
-        window.draw(infoSprite);
-        window.draw(infoText);
-        window.draw(finishedT);
+        if (startingScreen)
+        {
+            window.draw(sctT);
+            window.draw(uHighestT);
+            window.draw(uMaximumT);
+            window.draw(startScreenInfoT);
+        }
 
-        renderList(window, font, unsortedList, 40.0f, 870.0f);
-        drawListBar(window, font, unsortedList, 40.0f);
+        if (sortScreen)
+        {
+            window.draw(unsortedT);
+            window.draw(infoSprite);
+            window.draw(infoText);
+            window.draw(finishedT);
+
+            renderList(window, font, unsortedList, 40.0f, 870.0f);
+            drawListBar(window, font, unsortedList, 40.0f);
+        }
+
         window.display();
     }
 }
