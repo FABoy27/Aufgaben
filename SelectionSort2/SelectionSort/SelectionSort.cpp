@@ -38,7 +38,7 @@ void renderList(sf::RenderWindow& window, sf::Font font, std::vector<int>& numbe
 
     for (int e : numbersList)
     {
-        sf::Text unsortedT(font, std::to_string(e), 30);
+        sf::Text unsortedT(font, std::to_string(e), 20);
         unsortedT.setPosition(sf::Vector2f(xPos, yPos));
         yPos = yPos + gap;
         window.draw(unsortedT);
@@ -112,7 +112,7 @@ int main()
     sf::Text uHighestT(font, "Hoechste Sortier Zahl: 50", 20);
     uHighestT.setPosition(sf::Vector2f(350, 200));
 
-    sf::Text startScreenInfoT(font, "Mit den Pfeiltasten hoch und runter wird die zahl kleiner oder groeßer.\n Mit der Enter Taste kannst du einen Schritt weiter gehen und dann auch Starten.", 12);
+    sf::Text startScreenInfoT(font, "Mit den Pfeiltasten hoch und runter wird die zahl kleiner oder groesser.\n Mit der Enter Taste kannst du einen Schritt weiter gehen und dann auch Starten.", 12);
     startScreenInfoT.setPosition(sf::Vector2f(245, 260));
     startScreenInfoT.setFillColor(sf::Color::Red);
 
@@ -215,7 +215,7 @@ int main()
             window.draw(infoText);
             window.draw(finishedT);
 
-            renderList(window, font, unsortedList, 40.0f, 870.0f);
+            renderList(window, font, unsortedList, 32.0f, 870.0f);
             drawListBar(window, font, unsortedList, 30.0f);
         }
 
