@@ -167,12 +167,12 @@ int main()
                 //Arrow Key up 
                 if (static_cast<int>(keyReleased->code) == 73)
                 {
-                    if (uMaximum)
+                    if (uMaximum && maximumNum < 26)
                     {
                         maximumNum++;
                         uMaximumT.setString("Maximale Sortier Zahlen: " + std::to_string(maximumNum));
                     }
-                    else if (!uMaximum && uHighest)
+                    else if (!uMaximum && uHighest && highestNum < 100)
                     {
                         highestNum++;
                         uHighestT.setString("Hoechste Sortier Zahl: " + std::to_string(highestNum));
@@ -216,7 +216,7 @@ int main()
             window.draw(finishedT);
 
             renderList(window, font, unsortedList, 40.0f, 870.0f);
-            drawListBar(window, font, unsortedList, 40.0f);
+            drawListBar(window, font, unsortedList, 30.0f);
         }
 
         window.display();
