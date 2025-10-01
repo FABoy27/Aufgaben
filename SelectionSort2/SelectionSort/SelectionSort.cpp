@@ -109,6 +109,8 @@ int main()
     sf::Sprite infoSprite(texture);
     infoSprite.setScale(sf::Vector2f(0.2f, 0.2f)); 
 
+    sf::Text finishedT(font, "", 20);
+    finishedT.setPosition(sf::Vector2f(10, 45));
 
     while (window.isOpen())
     {
@@ -124,11 +126,14 @@ int main()
             }
         }
 
+        finishedT.setString("Abgeschlossen: " + std::to_string(selectedNumber + 1) + "/" + std::to_string(unsortedList.size()));
+
         window.clear();
 
         window.draw(unsortedT);
         window.draw(infoSprite);
         window.draw(infoText);
+        window.draw(finishedT);
 
         renderList(window, font, unsortedList, 40.0f, 870.0f);
         drawListBar(window, font, unsortedList, 40.0f);
