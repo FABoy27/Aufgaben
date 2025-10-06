@@ -140,7 +140,7 @@ int main()
             // Key Released ohne Clock-Object
             if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
             {
-                //Escape
+                //Enter
                 if (static_cast<int>(keyReleased->code) == 58)
                 {
                     if (startingScreen)
