@@ -27,7 +27,7 @@ void drawListBar(sf::RenderWindow& window, const sf::Font& font, std::vector<int
         barText.setPosition(sf::Vector2f(xPos + 2.0f, yPos - barHeight - 20.0f));
 
         window.draw(bar);
-        window.draw(barText);
+        window.draw(barText);   
     }
 }
 
@@ -94,15 +94,35 @@ void InsertionSort(std::vector<int>& unsortedList)
     for (int i = 1; i < unsortedList.size(); i++)
     {
         int selectedNumber = unsortedList[i];
-        int j = i - 1;
+        int j;
 
-        while (j >= 0 && unsortedList[j] > selectedNumber)
+        for (j = i - 1; j >= 0 && unsortedList[j] > selectedNumber; j--)
         {
             unsortedList[j + 1] = unsortedList[j];
-            j--;
         }
 
         unsortedList[j + 1] = selectedNumber;
+    }
+}
+
+void bubbleSort(std::vector<int>& arr) {
+    int n = arr.size();
+    for (int i = 0; i < n - 1; i++) 
+    {
+        bool swapped = false;
+
+        for (int j = 0; j < n - i - 1; j++) 
+        {
+
+            if (arr[j] > arr[j + 1]) 
+            {
+                std::swap(arr[j], arr[j + 1]);
+                swapped = true;
+            }
+        }
+
+        if (!swapped)
+            break;
     }
 }
 
@@ -111,14 +131,14 @@ int main()
     bool startingScreen = true;
     bool sortScreen = false;
 
-    std::vector<std::string> sortsSystems{ "Selection Sort", "Insertion Sort", "Bubble Sort" };
+    std::vector<std::string> sortsSystems{"Selection Sort", "Insertion Sort", "Bubble Sort"};
 
     bool uMaximum = true;
     bool uHighest = false;
     bool uSelectedSort = false;
     int maximumNum = 20; // Maximale Zahlen die Sortiert werden
     int highestNum = 50; // Höchste random Nummer
-    int selectedSortNum = 0;
+    int selectedSortNum = 0; 
 
     sf::RenderWindow window(sf::VideoMode({ 1000, 900 }), "Selection Sort 2");
 
@@ -201,9 +221,9 @@ int main()
                             case 1: 
                                 InsertionSort(unsortedList);
                             break;
-
+                                
                             case 2: 
-
+                                bubbleSort(unsortedList);
                             break;
                         }
                     }
