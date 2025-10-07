@@ -106,7 +106,7 @@ void InsertionSort(std::vector<int>& unsortedList)
 }
 
 void bubbleSort(std::vector<int>& arr) {
-    int n = arr.size();
+    size_t n = arr.size();
     for (int i = 0; i < n - 1; i++) 
     {
         bool swapped = false;
