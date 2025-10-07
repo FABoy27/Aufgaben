@@ -43,6 +43,11 @@ void renderList(sf::RenderWindow& window, sf::Font font, std::vector<int>& numbe
         yPos = yPos + gap;
         window.draw(unsortedT);
     }
+
+    for (int e : numbersList)
+    {
+        sf::Text dad(font, std::to_string(e), 20);
+    }
 }
 
 void addRandomNumToList(std::vector<int>& unsortedList, int maximumNum, int highestNum)
@@ -82,18 +87,43 @@ void SelectionSort(sf::RenderWindow& window, std::vector<int>& unsortedList, int
     {
         window.close();
     }
+
+    if (unsortedList.empty() || selectedNumber < unsortedList.size() - 1)
+    {
+        int smallerNumber = selectedNumber;
+    }
 }
 
+void InsertionSort(std::vector<int>& unsortedList)
+{
+    for (int i = 1; i < unsortedList.size(); i++)
+    {
+        int selectedNumber = unsortedList[i];
+        int j = i - 1;
+
+        while (j >= 0 && unsortedList[j] > selectedNumber)
+        {
+            unsortedList[j + 1] = unsortedList[j];
+            j--;
+        }
+
+        unsortedList[j + 1] = selectedNumber;
+    }
+}
 
 int main()
 {
     bool startingScreen = true;
     bool sortScreen = false;
 
+    std::vector<std::string> sortsSystems{ "Selection Sort", "Insertion Sort", "Bubble Sort" };
+
     bool uMaximum = true;
     bool uHighest = false;
+    bool uSelectedSort = false;
     int maximumNum = 20; // Maximale Zahlen die Sortiert werden
     int highestNum = 50; // Höchste random Nummer
+    int selectedSortNum = 0;
 
     sf::RenderWindow window(sf::VideoMode({ 1000, 900 }), "Selection Sort 2");
 
@@ -112,8 +142,11 @@ int main()
     sf::Text uHighestT(font, "Hoechste Sortier Zahl: 50", 20);
     uHighestT.setPosition(sf::Vector2f(350, 200));
 
-    sf::Text startScreenInfoT(font, "Mit den Pfeiltasten hoch und runter wird die zahl kleiner oder groesser.\n Mit der Enter Taste kannst du einen Schritt weiter gehen und dann auch Starten.", 12);
-    startScreenInfoT.setPosition(sf::Vector2f(245, 260));
+    sf::Text uSelectedSortingT(font, "Ausgewaehtes Sortier Verfahren: SelectionSort", 20);
+    uSelectedSortingT.setPosition(sf::Vector2f(250, 300));
+
+    sf::Text startScreenInfoT(font, "Mit den Pfeiltasten hoch und runter wird die zahl kleiner oder groesser (Oder eine andere \n Sortier Methode wird ausgewählt).  Mit der Enter Taste kannst du einen Schritt weiter gehen \n und dann auch Starten.", 12);
+    startScreenInfoT.setPosition(sf::Vector2f(245, 360));
     startScreenInfoT.setFillColor(sf::Color::Red);
 
     //Sorting Screen 
@@ -136,7 +169,6 @@ int main()
         {
             if (event->is<sf::Event::Closed>())
                 window.close();
-
             // Key Released ohne Clock-Object
             if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
             {
@@ -150,20 +182,38 @@ int main()
                             uMaximum = false;
                             uHighest = true;
                         }
-                        else if (!uMaximum && uHighest)
+                        else if (uHighest)
+                        {
+                            uHighest = false;
+                            uSelectedSort = true;
+                        }
+                        else if (uSelectedSort)
                         {
                             startingScreen = false;
                             sortScreen = true;
-                            uHighest = false;
+                            uSelectedSort = false;
                             addRandomNumToList(unsortedList, maximumNum, highestNum);
                         }
                     }
                     else if (sortScreen)
                     {
-                        SelectionSort(window, unsortedList, selectedNumber);
+                        switch (selectedSortNum)
+                        {
+                            case 0:
+                                SelectionSort(window, unsortedList, selectedNumber);
+                            break; 
+
+                            case 1: 
+                                InsertionSort(unsortedList);
+                            break;
+
+                            case 2: 
+
+                            break;
+                        }
                     }
                 }
-
+          
                 //Arrow Key up 
                 if (static_cast<int>(keyReleased->code) == 73)
                 {
@@ -176,6 +226,10 @@ int main()
                     {
                         highestNum++;
                         uHighestT.setString("Hoechste Sortier Zahl: " + std::to_string(highestNum));
+                    }
+                    else if (uSelectedSort && selectedSortNum < sortsSystems.size() - 1)
+                    {
+                        selectedSortNum++;
                     }
                 }
 
@@ -190,7 +244,11 @@ int main()
                     else if (!uMaximum && uHighest && highestNum > 2)
                     {
                         highestNum--;
-                        uHighestT.setString("Hoechste Sortier Zahl: " + std::to_string(highestNum));
+                        uHighestT.setString("Hoechste Sortier Zahl: " + std::to_string(highestNum)); 
+                    }
+                    else if (uSelectedSort && selectedSortNum > 0)
+                    {
+                        selectedSortNum--;
                     }
                 }
             }
@@ -206,6 +264,9 @@ int main()
             window.draw(uHighestT);
             window.draw(uMaximumT);
             window.draw(startScreenInfoT);
+            window.draw(uSelectedSortingT);
+
+            uSelectedSortingT.setString("Ausgewaehtes Sortier Verfahren: " + sortsSystems[selectedSortNum]);
         }
 
         if (sortScreen)
@@ -213,7 +274,10 @@ int main()
             window.draw(unsortedT);
             window.draw(infoSprite);
             window.draw(infoText);
-            window.draw(finishedT);
+            if (selectedSortNum == 0)
+            {
+                window.draw(finishedT);
+            }
 
             renderList(window, font, unsortedList, 32.0f, 870.0f);
             drawListBar(window, font, unsortedList, 30.0f);
