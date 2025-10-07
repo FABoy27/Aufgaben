@@ -43,11 +43,6 @@ void renderList(sf::RenderWindow& window, sf::Font font, std::vector<int>& numbe
         yPos = yPos + gap;
         window.draw(unsortedT);
     }
-
-    for (int e : numbersList)
-    {
-        sf::Text dad(font, std::to_string(e), 20);
-    }
 }
 
 void addRandomNumToList(std::vector<int>& unsortedList, int maximumNum, int highestNum)
